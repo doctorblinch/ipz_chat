@@ -7,10 +7,11 @@ $(document).ready(function() {
 		//console.log('Received message' + msg);
 
 		console.log(msg);
-
-		$("#messages").append('<li>'+ msg[0] + ': ' + msg[1] + '</li>');
-		//$("#messages").append('<p>eeeee' +msg[0]+ '<p>');
-		console.log(msg[0] + 'send:' + msg[1]);
+		msg[1] = msg[1]
+			.replace('<','&lt;')
+			.replace('>', '&gt;');
+		$("#messages").append('<li>🐊' + '<small>(' + msg[2] + ')</small> ' + '<b>' + msg[0] + '</b>: ' + msg[1] + '</li>');
+		console.log(msg[0] + ' send: ' + msg[1]);
 	});
 	$('#sendbutton').on('click', function() {
 		socket.send($('#myMessage').val());

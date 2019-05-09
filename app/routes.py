@@ -4,13 +4,18 @@ from flask_socketio import send
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Message, get_previous_messages
 from app.forms import RegistrationForm, LoginForm
+from datetime import datetime
 
 @app.route('/')
-@login_required
 def index():
-    return render_template('index.html')
+    return render_template('indexx.html')
+
+@app.route('/stats')
+def stats():
+    return render_template('stats.html')
 
 @app.route('/chat')
+@login_required
 def chat():
     for_sending = []
     for i in get_previous_messages():
@@ -18,14 +23,18 @@ def chat():
         #print(Message.query.order_by(Message.id.desc()).all())
 
         #handleMessage(for_sending, broadcast=True)
+    for_sending = for_sending[::-1]
     return render_template('chat.html',previous_messages=for_sending)
 
 @socketio.on('message')
 def handleMessage(msg):
     if current_user.is_authenticated:
-        msg_user = [current_user.username,msg]
+        cur_time = str(datetime.now().strftime('%H:%M:%S'))
+        msg_user = [current_user.username,msg,cur_time]
         message = Message(body=msg, user_id=current_user.id)
-        db.session.add(message)
+        if message.body != ' has connected!':
+            db.session.add(message)
+            print(message.body)
         db.session.commit()
         #print(msg_user)
         send(msg_user, broadcast=True)

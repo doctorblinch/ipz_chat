@@ -45,7 +45,7 @@ def load_user(id):
     return User.query.get(int(id))
 
 
-def get_previous_messages(quantity=10, chat_id='global_chat'):
+def get_previous_messages(quantity=15, chat_id='global_chat'):
     #messages_for_sending = Message.query.limit(quantity).all()
     messages_for_sending =  Message.query.order_by(Message.id.desc()).limit(quantity).all()
     return messages_for_sending
