@@ -4,6 +4,7 @@ from flask_socketio import send
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Message, get_previous_messages
 from app.forms import RegistrationForm, LoginForm
+from app.stats import average_words_in_message, user_activity, time_stat
 from datetime import datetime
 
 @app.route('/')
@@ -12,7 +13,10 @@ def index():
 
 @app.route('/stats')
 def stats():
-    return render_template('stats.html')
+    AWiM = average_words_in_message()
+    UA = user_activity()
+    TS = time_stat()
+    return render_template('stats.html',av_words=AWiM,user_activity=UA,time_stats=TS)
 
 @app.route('/chat')
 @login_required

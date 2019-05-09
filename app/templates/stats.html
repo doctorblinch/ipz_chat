@@ -1,6 +1,49 @@
 {% extends "base.html" %}
 
 {% block content %}
-Stats
+<h2>Stats</h2><br>
 
+<div><h3>Average quantity of words in sentence is: </h3>{{ av_words }}</div>
+<br>
+====================
+<br>
+<div>
+Activity of users depending on the hour of day:
+<br>
+<table border="1">
+    <tr>
+      {% for i in range(24)%}
+
+      <td>From {{i}}:00 to {{i+1}}:00</td>
+
+      {% endfor %}
+    </tr>
+    <tr>
+      {% for i in range(24)%}
+
+      <th>{{time_stats[0][i]}}</th>
+
+      {% endfor %}
+    </tr>
+</table>
+</div>
+
+<br>
+<div>
+Activity of users depending on the day of the week:
+{% set days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']%}
+<ul>
+  {% for i in range(7)%}
+
+    <li>{{days[i]}}: <b>{{time_stats[1][i]}}</b></li>
+
+  {% endfor %}
+</ul>
+
+</div>
+<br>
+====================
+<br>
+{{ user_activity}}
+<br>
 {% endblock %}
