@@ -14,7 +14,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)
+        return 'User {}'.format(self.username)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -37,8 +37,15 @@ class Message(db.Model):
 
     def __repr__(self):
         return '<Message: {}, from: {}, to: {}>'.format(self.body, self.user_id, self.chat_id)
+        #return self.body
 
 
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+
+def get_previous_messages(quantity=10, chat_id='global_chat'):
+    #messages_for_sending = Message.query.limit(quantity).all()
+    messages_for_sending =  Message.query.order_by(Message.id.desc()).limit(quantity).all()
+    return messages_for_sending

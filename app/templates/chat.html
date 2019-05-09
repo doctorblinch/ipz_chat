@@ -7,7 +7,16 @@
 </head>
 <body>
     <script type="text/javascript" src="{{ url_for('static', filename='javascript/chat.js') }}"></script>
-<ul id="messages"></ul>
+<ul id="messages">
+
+{% set j = previous_messages|length %}
+{% for i in range(previous_messages|length) %}
+
+{{ previous_messages[i][0] }}: {{ previous_messages[i][1] }}
+<br>
+
+{% endfor %}
+</ul>
 <input type="text" id="myMessage">
 <button id="sendbutton">Send</button>
 </body>

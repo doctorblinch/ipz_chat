@@ -1,11 +1,14 @@
 $(document).ready(function() {
-	var socket = io.connect('http://192.168.131.14:5000');
+	var socket = io.connect('http://192.168.0.101:5000');
 	socket.on('connect', function() {
 		socket.send(' has connected!');
 	});
 	socket.on('message', function(msg) {
 		//console.log('Received message' + msg);
-		$("#messages").append('<li>'+ msg[0] + 'send:' + msg[1] + '</li>');
+
+		console.log(msg);
+
+		$("#messages").append('<li>'+ msg[0] + ': ' + msg[1] + '</li>');
 		//$("#messages").append('<p>eeeee' +msg[0]+ '<p>');
 		console.log(msg[0] + 'send:' + msg[1]);
 	});

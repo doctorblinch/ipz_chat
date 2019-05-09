@@ -2,7 +2,7 @@ from app import app, socketio, db
 from flask import render_template, flash, redirect, url_for
 from flask_socketio import send
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Message
+from app.models import User, Message, get_previous_messages
 from app.forms import RegistrationForm, LoginForm
 
 @app.route('/')
@@ -12,12 +12,18 @@ def index():
 
 @app.route('/chat')
 def chat():
-    return render_template('chat.html')
+    for_sending = []
+    for i in get_previous_messages():
+        for_sending.append([(User.query.filter_by(id = i.user_id).first().username),i.body])
+        #print(Message.query.order_by(Message.id.desc()).all())
+
+        #handleMessage(for_sending, broadcast=True)
+    return render_template('chat.html',previous_messages=for_sending)
 
 @socketio.on('message')
 def handleMessage(msg):
     if current_user.is_authenticated:
-        msg_user = [str(current_user),msg]
+        msg_user = [current_user.username,msg]
         message = Message(body=msg, user_id=current_user.id)
         db.session.add(message)
         db.session.commit()
@@ -37,15 +43,15 @@ def handleConnect():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('chat'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
-            return redirect(url_for('login'))
+            return redirect(url_for('chat'))
         login_user(user, remember=form.remember_me.data)
-        return redirect(url_for('index'))
+        return redirect(url_for('chat'))
     return render_template('login.html', title='Sign In', form=form)
 
 @app.route('/logout')
