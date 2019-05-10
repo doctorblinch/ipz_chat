@@ -1,14 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Stats</h2><br>
+<h2>Statistics</h2><br>
 
-<div><h3>Average quantity of words in sentence is: </h3>{{ av_words }}</div>
+<div><h3>Average quantity of words in sentence is: {{ av_words }} </h3></div>
 <br>
-====================
 <br>
 <div>
-Activity of users depending on the hour of day:
+<h3>Activity of users depending on the hour of day:</h3>
 <br>
 <table border="1">
     <tr>
@@ -30,7 +29,7 @@ Activity of users depending on the hour of day:
 
 <br>
 <div>
-Activity of users depending on the day of the week:
+<h3>Activity of users depending on the day of the week:</h3>
 {% set days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']%}
 <ul>
   {% for i in range(7)%}
@@ -42,8 +41,27 @@ Activity of users depending on the day of the week:
 
 </div>
 <br>
-====================
 <br>
-{{ user_activity}}
+<h3>Most active users:</h3>
+
+<table border="1">
+  <tr>
+    <th>№</th>
+    <th>Username</th>
+    <th>Messages quantity</th>
+  </tr>
+
+  {% for i in range(user_activity|length) %}
+
+  <tr>
+    <td>{{i + 1}}</td>
+    <td>{{user_activity[i][1]}}</td>
+    <td>{{user_activity[i][2]}}</td>
+  </tr>
+
+  {% endfor %}
+
+</table>
+<br>
 <br>
 {% endblock %}
