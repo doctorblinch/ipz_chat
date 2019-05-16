@@ -6,6 +6,7 @@ from app.models import User, Message, get_previous_messages
 from app.forms import RegistrationForm, LoginForm
 from app.stats import average_words_in_message, user_activity, time_stat
 from datetime import datetime
+from app.errors import *
 
 @app.route('/')
 def index():

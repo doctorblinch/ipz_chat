@@ -13,3 +13,13 @@ migrate = Migrate(app,db)
 socketio = SocketIO(app)
 
 from app import routes, models
+
+
+# add Admin
+from app.models import *
+from app.admin_view import *
+
+admin = Admin(app, 'FlaskApp', url='/', index_view=HomeAdminView(name='Home'))
+admin.add_view(UserAdminView(User, db.session))
+admin.add_view(RecordAdminView(Message, db.session))
+admin.add_view(UserAdminView(Chat, db.session))
