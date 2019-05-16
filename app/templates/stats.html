@@ -1,67 +1,42 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Statistics</h2><br>
-
-<div><h3>Average quantity of words in sentence is: {{ av_words }} </h3></div>
-<br>
+<h2>Statistics</h2>
 <br>
 <div>
-<h3>Activity of users depending on the hour of day:</h3>
-<br>
-<table border="1">
-    <tr>
-      {% for i in range(24)%}
-
-      <td>From {{i}}:00 to {{i+1}}:00</td>
-
-      {% endfor %}
-    </tr>
-    <tr>
-      {% for i in range(24)%}
-
-      <th>{{time_stats[0][i]}}</th>
-
-      {% endfor %}
-    </tr>
-</table>
-</div>
-
-<br>
-<div>
-<h3>Activity of users depending on the day of the week:</h3>
-{% set days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']%}
-<ul>
-  {% for i in range(7)%}
-
-    <li>{{days[i]}}: <b>{{time_stats[1][i]}}</b></li>
-
-  {% endfor %}
-</ul>
-
+  <h2>Average quantity of words in sentence is: <b> {{ av_words }} </b></h2>
 </div>
 <br>
 <br>
-<h3>Most active users:</h3>
-
-<table border="1">
-  <tr>
-    <th>№</th>
-    <th>Username</th>
-    <th>Messages quantity</th>
-  </tr>
-
-  {% for i in range(user_activity|length) %}
-
-  <tr>
-    <td>{{i + 1}}</td>
-    <td>{{user_activity[i][1]}}</td>
-    <td>{{user_activity[i][2]}}</td>
-  </tr>
-
-  {% endfor %}
-
-</table>
+<div>
+  <h3>Most active users:</h3>
+  <canvas id="mostActiveUsersBar" height="400"></canvas>
+</div>
 <br>
 <br>
+<div>
+  <h3>Top 5 most active users:</h3>
+  <canvas id="top5Users" height="400"></canvas>
+</div>
+<br>
+<br>
+<div>
+  <h3>Activity of users depending on the day of the week:</h3>
+  <canvas id="statByDaysOfTheWeek" height="400"></canvas>
+</div>
+<br>
+<br>
+<div>
+  <h3>Activity of users depending on the hour of the day:</h3>
+  <canvas id="statByHours" height="400"></canvas>
+</div>
+<br>
+<br>
+
+<script>
+  var userActivity = {{ user_activity|tojson }};
+  var timeStats = {{ time_stats|tojson }};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+<script src="{{ url_for('static', filename='javascript/stats.js') }}"></script>
 {% endblock %}
