@@ -10,8 +10,10 @@ from flask_admin import Admin
 
 class AdminMixin:
     def is_accessible(self):
+        if current_user.username == 'admin':
+            return True
         #return current_user.has_role('admin')
-        return True
+        return False
 
     def inaccessible_callback(self, name, **kwargs):
         return redirect(url_for('security.login', next=request.url))

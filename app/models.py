@@ -13,6 +13,9 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
 
+#   chat = db.relationship('Chat')
+    chat_id = db.Column(db.Integer, db.ForeignKey("chat.id"))
+
     def __repr__(self):
         return 'User {}'.format(self.username)
 
@@ -26,6 +29,9 @@ class User(UserMixin, db.Model):
 class Chat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True, unique=True)
+
+#    users = db.relationship("User", backref="chat", lazy='dynamic')
+    users = db.relationship("User")
 
 
 class Message(db.Model):
@@ -47,5 +53,5 @@ def load_user(id):
 
 def get_previous_messages(quantity=15, chat_id='global_chat'):
     #messages_for_sending = Message.query.limit(quantity).all()
-    messages_for_sending =  Message.query.order_by(Message.id.desc()).limit(quantity).all()
+    messages_for_sending =  Message.query.filter_by(chat_id=chat_id).order_by(Message.id.desc()).limit(quantity).all()
     return messages_for_sending
