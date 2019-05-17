@@ -47,11 +47,11 @@ var top5UsersChart = new Chart(ctx1, {
         labels: username.slice(0, 5),
         datasets: [{
             backgroundColor: [
-              'red',
-              'blue',
-              'green',
-              'yellow',
-              'orange'
+              'rgb(255, 100, 134)',
+              'rgb(255, 159, 64)',
+              'rgb(255, 204, 87)',
+              'rgb(74, 192, 192)',
+              'rgb(54, 162, 235)'
             ],
             data: msgQuantity.slice(0, 5),
             label: 'label1'

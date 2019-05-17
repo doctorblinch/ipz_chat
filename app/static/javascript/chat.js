@@ -1,6 +1,6 @@
 
 $(document).ready(function() {
-	ip = 'http://' + '192.168.0.101' + ':5000';
+	ip = 'http://' + '192.168.128.34' + ':5000';
 	var socket = io.connect(ip);
 	socket.on('connect', function() {
 		socket.send(' has connected!');
