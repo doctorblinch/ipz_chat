@@ -3,6 +3,7 @@ from app.models import User, Chat, Message
 
 HOURS_IN_DAY = 24
 DAYS_IN_WEEK = 7
+UTC_TIME = 3
 
 def time_stat():
     messages_data = Message.query.all()
@@ -19,7 +20,7 @@ def time_stat():
 
     for msg in messages_data:
         weekday = msg.timestamp.weekday()
-        hour = msg.timestamp.hour - 1
+        hour = (msg.timestamp.hour - 1 + UTC_TIME) % 24
         stat_by_days[weekday] += 1
         stat_by_hours[hour] += 1
 
