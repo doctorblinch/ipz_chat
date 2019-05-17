@@ -24,4 +24,15 @@ $(document).ready(function() {
 			$('#myMessage').val('');
 		}
 		});
+
+		function sendMsg(key){
+		    switch(key.keyCode){
+		        case 13:
+							socket.send($('#myMessage').val());
+							console.log($('#myMessage').val());
+							$('#myMessage').val('');
+		    }
+		}
+
+		addEventListener("keypress", sendMsg);
 });
