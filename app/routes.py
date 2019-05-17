@@ -63,7 +63,7 @@ def chat_id(id):
         for_sending = for_sending[::-1]
         return render_template('chat.html',previous_messages=for_sending)
     else:
-        return 'Go away!'
+        return '<a href=/>Go away!</a>'
 
 """@socketio.on('connect')
 def handleConnect():

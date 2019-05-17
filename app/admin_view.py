@@ -33,12 +33,16 @@ class HomeAdminView(AdminMixin, AdminIndexView):
 
 
 class RecordAdminView(AdminMixin, BaseModelView):
-    form_columns = ['body']
+    #form_columns = ['body']
+    #form_columns = ['body']
+    #form_columns = ['body']
     pass
 
 
 class UserAdminView(AdminMixin, BaseModelView):
+    #form_columns = ['']
     pass
 
 class ChatAdminView(AdminMixin, BaseModelView):
+    form_columns = ['users']
     pass

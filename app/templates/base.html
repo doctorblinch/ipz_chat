@@ -17,8 +17,9 @@
             {% else %}
             <a href="{{ url_for('chat') }}">Chat</a>
             <a href="{{ url_for('logout') }}">Logout</a>
-            {% endif %}
+
             <p style="margin-left:80%;">Hello,{{current_user.username}}!</p>
+            {% endif %}
         </div>
         <hr>
         {% with messages = get_flashed_messages() %}

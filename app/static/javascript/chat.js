@@ -12,7 +12,8 @@ $(document).ready(function() {
 		msg[1] = msg[1]
 			.replace('<','&lt;')
 			.replace('>', '&gt;');
-		$("#messages").append('<li>🐊' + '<small>(' + msg[2] + ')</small> ' + '<b>' + msg[0] + '</b>: ' + msg[1] + '</li>');
+		//$("#messages").append('<li>🐊' + '<small>(' + msg[2] + ')</small> ' + '<b>' + msg[0] + '</b>: ' + msg[1] + '</li>');
+		$("#messages").append('<p>🐊' + '<small>(' + msg[2] + ')</small> ' + '<b>' + msg[0] + '</b>: ' + msg[1] + '</p>');
 		console.log(msg[0] + ' send: ' + msg[1]);
 		});
 
