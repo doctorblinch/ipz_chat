@@ -1,5 +1,5 @@
 from app import app, socketio, db
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, jsonify
 from flask_socketio import send
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Message, get_previous_messages, Chat, chats_users
@@ -7,6 +7,8 @@ from app.forms import RegistrationForm, LoginForm, AddChatForm
 from app.stats import average_words_in_message, user_activity, time_stat
 from datetime import datetime
 from app.errors import *
+import speech_recognition as sr
+import pyaudio
 
 @app.route('/')
 def index():
@@ -34,6 +36,20 @@ def chat():
     return render_template('chat.html',previous_messages=for_sending)
 
 
+def voice():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening...")
+        audio = r.listen(source)
+        try:
+            text = r.recognize_google(audio)
+            print("You said : {}".format(text))
+            return text
+        except:
+            print("Sorry could not recognize what you said")
+    return ''
+
+
 @socketio.on('message')
 def handleMessage(msg):
     if current_user.is_authenticated:
@@ -41,7 +57,12 @@ def handleMessage(msg):
         msg_user = [current_user.username,msg[0],cur_time]
 
         chat_id = (msg[1].split('/'))[-1]
-        print(chat_id)
+        #print(chat_id)
+        if msg[0] == 'voice message':
+            print('\n\n\nVOICE\n\n\n')
+            msg[0] = voice()
+            if msg[0] != '':
+                msg_user = [current_user.username,msg[0],cur_time]
         message = Message(body=msg[0], user_id=current_user.id, chat_id=chat_id)
         if message.body != ' has connected!':
             db.session.add(message)
