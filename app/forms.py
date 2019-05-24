@@ -1,13 +1,23 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length
-from app.models import User
+from app.models import User, Chat
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
+
+class AddChatForm(FlaskForm):
+    name = StringField('Chat name', validators=[DataRequired()])
+    users = StringField('Users', validators=[DataRequired()])
+    submit = SubmitField('Create')
+
+    def validate_name(self, name):
+        chat = Chat.query.filter_by(name=name.data).first()
+        if chat is not None:
+            raise ValidationError('Please use a different name for chat.')
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])

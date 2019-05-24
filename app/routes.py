@@ -2,8 +2,8 @@ from app import app, socketio, db
 from flask import render_template, flash, redirect, url_for
 from flask_socketio import send
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Message, get_previous_messages, Chat
-from app.forms import RegistrationForm, LoginForm
+from app.models import User, Message, get_previous_messages, Chat, chats_users
+from app.forms import RegistrationForm, LoginForm, AddChatForm
 from app.stats import average_words_in_message, user_activity, time_stat
 from datetime import datetime
 from app.errors import *
@@ -20,7 +20,6 @@ def stats():
     return render_template('stats.html',av_words=AWiM,user_activity=UA,time_stats=TS)
 
 @app.route('/chat')
-#@login_required
 def chat():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
@@ -33,6 +32,7 @@ def chat():
         #handleMessage(for_sending, broadcast=True)
     for_sending = for_sending[::-1]
     return render_template('chat.html',previous_messages=for_sending)
+
 
 @socketio.on('message')
 def handleMessage(msg):
@@ -63,7 +63,31 @@ def chat_id(id):
         for_sending = for_sending[::-1]
         return render_template('chat.html',previous_messages=for_sending)
     else:
-        return '<a href=/>Go away!</a>'
+        return '<a href=/><h1>Go away!</h1></a>'
+
+
+@app.route('/create_new_chat', methods=['GET','POST'])
+def create_new_chat():
+    form = AddChatForm()
+    if form.validate_on_submit():
+        users = form.users.data
+        print('\n\n\nUsers are:',users,'\n\n\n')
+        for user in users.split(' '):
+            print(user)
+            if (User.query.filter_by(username=user).first()) is None:
+                flash('Invalid users selected')
+                return redirect(url_for('chat'))
+        users = users.split(' ')
+        u = []
+        for user in users:
+            u.append(User.query.filter_by(username=user).first())
+        chat = Chat(name=form.name.data, users=u)
+        print(chat)
+        db.session.add(chat)
+        db.session.commit()
+        flash('Congratulations, you created a new chat!')
+        return redirect(url_for('chat_id',id=chat.id))
+    return render_template('create_new_chat.html',title='Create new chat', form=form)
 
 """@socketio.on('connect')
 def handleConnect():
@@ -85,6 +109,21 @@ def login():
         login_user(user, remember=form.remember_me.data)
         return redirect(url_for('chat'))
     return render_template('login.html', title='Sign In', form=form)
+
+
+@app.route('/voice', methods=['POST'])
+def voice_rec():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening...")
+        audio = r.listen(source)
+        try:
+            text = r.recognize_google(audio)
+            print("You said : {}".format(text))
+        except:
+            print("Sorry could not recognize what you said")
+    return text
+
 
 @app.route('/logout')
 def logout():
