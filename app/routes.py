@@ -7,12 +7,19 @@ from app.forms import RegistrationForm, LoginForm, AddChatForm
 from app.stats import average_words_in_message, user_activity, time_stat
 from datetime import datetime
 from app.errors import *
-import speech_recognition as sr
-import pyaudio
+from flask_restplus import Resource, Api
+
+
+
+api = Api(app)
+name_space = api.namespace('api', description='Main APIs')
+
+
 
 @app.route('/')
 def index():
     return render_template('indexx.html')
+
 
 @app.route('/stats')
 def stats():
@@ -21,6 +28,7 @@ def stats():
     TS = time_stat()
     return render_template('stats.html',av_words=AWiM,user_activity=UA,time_stats=TS)
 
+@name_space.route("/chat")
 @app.route('/chat')
 def chat():
     if not current_user.is_authenticated:
@@ -36,18 +44,6 @@ def chat():
     return render_template('chat.html',previous_messages=for_sending)
 
 
-def voice():
-    r = sr.Recognizer()
-    with sr.Microphone() as source:
-        print("Listening...")
-        audio = r.listen(source)
-        try:
-            text = r.recognize_google(audio)
-            print("You said : {}".format(text))
-            return text
-        except:
-            print("Sorry could not recognize what you said")
-    return ''
 
 
 @socketio.on('message')

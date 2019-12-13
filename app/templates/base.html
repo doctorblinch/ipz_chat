@@ -18,7 +18,7 @@
             {% else %}
             <a href="{{ url_for('chat') }}">Chat</a>
             <a href="{{ url_for('logout') }}">Logout</a>
-            <p style="margin-left:80%;">Hello,{{current_user.username}}!</p>
+            <p style="margin-left:80%;">Hello, {{current_user.username}}!</p>
             {% endif %}
         </div>
         <hr>

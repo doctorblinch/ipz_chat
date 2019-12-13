@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	ip = 'http://' + '192.168.128.96' + ':5000';
+	ip = 'http://' + '192.168.32.228' + ':5000';
 	var socket = io.connect(ip);
 	socket.on('connect', function() {
 		pathname = window.location.pathname
